@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include<math.h>
+int main()
+{
+    int bina,dec=0,i=0,rem;
+    scanf("%d",&bina);
+    while(bina!=0){
+        rem=bina%10;
+        bina=bina/10;
+        dec += rem*pow(2,i);
+        ++i;
+    }
+    printf("%d",dec);
+    return 0;
+}
