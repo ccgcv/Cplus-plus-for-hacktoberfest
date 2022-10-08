@@ -7,4 +7,4 @@ int constrainedSubsetSum(vector<int>& ar, int k) {
             pq.push({ar[idx],idx});
         }
         return max(ans,pq.top().first);
-    }
+ }
