@@ -1,0 +1,268 @@
+#include <iostream>
+#include <cstdlib>
+#define MAX 10
+#define M 10
+using namespace std;
+
+class STACK
+{
+    int top;
+    int arr[MAX];
+
+public:
+    STACK()
+    {
+        top = -1;
+    }
+    bool isempty();
+    bool isfull();
+    int push(int);
+    int pop();
+    void display_stack();
+};
+
+bool STACK ::isempty()
+{
+    if (top == -1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+bool STACK ::isfull()
+{
+    if (top == MAX - 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int STACK ::push(int n)
+{
+    if (isfull())
+    {
+        return 0;
+    }
+    else
+    {
+        top++;
+        arr[top] = n;
+        return arr[top];
+    }
+}
+
+int STACK ::pop()
+{
+    if (isempty())
+    {
+        return 0;
+    }
+    else
+    {
+        int temp = arr[top];
+        top--;
+        return temp;
+    }
+}
+
+void STACK ::display_stack()
+{
+    for (int i = top; i >= 0; i--)
+    {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
+class QUEUE
+{
+    int front, rear;
+    int a[M];
+
+public:
+    QUEUE()
+    {
+        front = -1;
+        rear = -1;
+    }
+    bool isfull();
+    bool isempty();
+    int enqueue(int);
+    int dequeue();
+    void display_queue();
+};
+
+bool QUEUE ::isfull()
+{
+    if (rear == M - 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+bool QUEUE ::isempty()
+{
+    if (front == -1 && rear == -1 || front > rear)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int QUEUE ::enqueue(int n)
+{
+    if (isfull())
+    {
+        return 0;
+    }
+    else
+    {
+        if (isempty())
+        {
+            front = 0;
+            rear++;
+            a[rear] = n;
+            return a[rear];
+        }
+        else
+        {
+            rear++;
+            a[rear] = n;
+            return a[rear];
+        }
+    }
+}
+
+int QUEUE ::dequeue()
+{
+    if (isempty())
+    {
+        return 0;
+    }
+    else
+    {
+        int temp = a[front];
+        front++;
+        return temp;
+    }
+}
+void QUEUE ::display_queue()
+{
+    for (int i = front; i <= rear; i++)
+    {
+        cout << a[i] << " ";
+    }
+    cout << endl;
+}
+int main()
+{
+    STACK s;
+    QUEUE q;
+    int choice, data, element;
+    char opt;
+    while (1)
+    {
+        cout << "1.Stack" << endl
+             << "2.Queue" << endl
+             << "3.Exit" << endl;
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            do
+            {
+                cout << "a.Push" << endl
+                     << "b.Pop" << endl
+                     << "c.Display Stack" << endl
+                     << "d.Exit from Stack"<<endl;
+                cin >> opt;
+                switch (opt)
+                {
+                case 'a':
+                    cout << "Enter the element to add in stack:" << endl;
+                    cin >> data;
+                    element = s.push(data);
+                    if (element == 0)
+                    {
+                        cout << "Stack is full" << endl;
+                    }
+                    else
+                    {
+                        cout << element << " pushed successfully." << endl;
+                    }
+                    break;
+                case 'b':
+                    element = s.pop();
+                    if (element == 0)
+                    {
+                        cout << "Stack is empty" << endl;
+                    }
+                    else
+                    {
+                        cout << element << " poped successfully." << endl;
+                    }
+                    break;
+                case 'c':
+                    s.display_stack();
+                    break;
+                }
+            } while (opt != 'd');
+            break;
+        case 2:
+            do
+            {
+                cout << "a.Enqueue" << endl
+                     << "b.Dequeue" << endl
+                     << "c.Display Queue" << endl
+                     << "d.Exit from Queue"<<endl;
+                cin >> opt;
+                switch (opt)
+                {
+                case 'a':
+                    cout << "Enter the element to add in Queue:" << endl;
+                    cin >> data;
+                    element = q.enqueue(data);
+                    if (element == 0)
+                    {
+                        cout << "Queue is full" << endl;
+                    }
+                    else
+                    {
+                        cout << element << " added successfully." << endl;
+                    }
+                    break;
+                case 'b':
+                    element = q.dequeue();
+                    if (element == 0)
+                    {
+                        cout << "Queue is empty" << endl;
+                    }
+                    else
+                    {
+                        cout << element << " removed from queue successfully." << endl;
+                    }
+                    break;
+                case 'c':
+                    q.display_queue();
+                    break;
+                }
+            } while (opt != 'd');
+            break;
+        }
+    }
+}
