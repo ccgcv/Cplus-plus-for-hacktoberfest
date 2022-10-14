@@ -1,0 +1,144 @@
+Recursion:
+Many teachers say that recursion is for making input smaller 
+this is a wrong mindset wich should be changed
+input becomes smaller automatically but our main and promary goal is diffrent i.e. decision + choices
+
+decision + choices : 
+first try to look at the problem whether it is a recursion 
+
+Problem statement --> recursive tree design --> code will be cakewalk 
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
+lets take an example : subset problem "abc"
+
+abc subsets: " " ------ 0
+             a b c ---- 1
+             ab bc ac - 2
+             abc ------ 3
+now draw a table by yourself first like this  
+       a     b    c |
+" "    0     0    0 |
+a      1     0    0 |
+--------------------+ etc.
+{  observe this table with choice and decisions 
+   remember observation skill should be in you, i cannot help it with that }
+
+
+
+
+
+
+       a     b    c               
+" "    0     0    0          
+a      1     0    0           
+b      0     1    0             
+c      0     0    1             
+ab     1     1    0               
+bc     0     1    1               
+ac     1     0    1             
+abc    1     1    1               
+ what happened in a , a is only chosen rest are not, in ab only a and b( these are choices these will create decision)
+ also notice we have not taken ba or ca as this is non orderly unqiue subsets then
+
+
+
+
+
+
+
+
+
+
+
+
+whenever there is choice and decision, recursion will be there
+
+now making a recursion tree that is input output method :
+                  ->op & ip  //   ->op is output is initialized first 
+                   /       \
+   op1 & smaller ip         op2 & smaller ip 
+            /     \
+     op1' & ip    op1'' & ip  
+     
+     
+     recursion tree : ab only
+     
+                   (" ")op ip(ab)   // first decide on 'a' 
+                     X /                  \ (a taken)
+                      /                    \           
+           (" ")op ip(b)                   ("a")op ip(b)   
+            X /      \ (b taken)           X /       \ (b taken)
+             /        \                     /         \ 
+(" ")op ip()        ("b")op ip()    ("a")op ip()      ("ab")op ip()
+
+note :  ** number of branches = number of choices **
+input is empty so stop 
+you will notice answer is in leaf node
+also input becomes smaller and smaller as we go down
+     
+try with abc now yourself
+recursion is used in almost all data structures 
+
+there are three levels of recursion :  according to me 
+1. induction base hypothesis (easy)
+2. recursion tree (medium)  [ input - output ]
+3.choice diagram(very hard) [ dynamic programming ]
+
+the above levels are also the flow of thinking for a question 
+
+*---------------------------*basic recursion or first level of recurion(ibh)*---------------------------------------------------------------------* 
+
+code : print n to 1
+
+// do not learn code just take one look and read explanation
+ 
+ void print(int n)
+ {
+  if(n==1) // this is base condition
+  {
+    cout<<n<<" ";
+    return ;
+  }
+  print(n-1);// hypothesis 
+  cout<<n<<" "; // induction
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ Explanation:
+1.  base condition :  last 
+       base condition is the smallest input or the largest input that is ".0." this area:  [-input]-------".0."--------[+input]  
+       base condition is calculated in last
+       .0. is actually the area around 0 
+       [-input] and [+input] is also base condtion which are the largest input
+  
+2. hypothesis :   first 
+ first derive hypothesis such as 
+ print(n-1) // this will print n-1 numbers where n is any number
+ height(tree) //  this will give height of "tree" where tree is any binary tree 
+ decide what this function will do( how it will do will be in induction ) and confirm it and stick to that process only
+ like print(7) = 1 2 3 4 5 6 7 // print 7 will print 1 2 3 4 5 6 7, this process is hypothesis
+ print(6) = 1 2 3 4 5 6
+    
+              
+ 
+
+
+
+3. induction :   normally not first but exceptions are there 
+solve(n) = 1 to n print 
+ for solve to do this we do induction 
+ because once define it will work the same way  
+ we can do it for n to 1 as well but remember solve function just prints a number n we have to do the induction 
+ we have to print 1 to 7 
+ print(7) ( = 1 2 3 4 5 6 7) then in this : print(6) (as it was "n-1") will print 1 to 6 but then where should be print function put?
+ it is according to question,, as it is 1 to 7 so we do before output 
+ if it was 7 to 1 we do it after output
+ here you have to see on where you have to induce before or after " cout<< "  
+ why not recursion tree ? because we need input at every node and not only at leaf node.        [ Next topic level 2 recursion tree in detail ]
