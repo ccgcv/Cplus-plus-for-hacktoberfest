@@ -1,0 +1,303 @@
+Given two square matrices A and B of size n x n each, find their multiplication matrix. 
+
+Old Method: T.C. = O(N*N*N)
+void multiply(int A[][N], int B[][N], int C[][N])
+{
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			C[i][j] = 0;
+			for (int k = 0; k < N; k++)
+			{
+				C[i][j] += A[i][k]*B[k][j];
+			}
+		}
+More better method,
+Following is simple Divide and Conquer method to multiply two square matrices. 
+Divide matrices A and B in 4 sub-matrices of size N/2 x N/2 as shown in the below diagram. 
+Calculate following values recursively. ae + bg, af + bh, ce + dg and cf + dh. 
+	a   b   \ /    e   f     --      ae+bg   af+bh  
+  c   d   / \    g   h     --      ce+dg   cf+dh     
+  
+Doing this will also be O(N*N*N) time complexity
+code: 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+Better method which is strassen method,
+
+In the above divide and conquer method, the main component for high time complexity is 8 recursive calls. 
+the idea of Strassen’s method is to reduce the number of recursive calls to 7. 
+Strassen’s method is similar to above simple divide and conquer method in the sense that this method also divide matrices to sub-matrices
+of size N/2 x N/2 as shown in the above diagram, but in Strassen’s method, the four sub-matrices of result are calculated using following formulae.
+p1 = a(f-h) ; p2 = (a+b)h ; p3 = (c+d)e ; p4 = d(g-e) ; p5 = (a+d)(e+h) ; p6 = (b-d)(g+h) ; p7 = (a-c)(e+f);
+answer of abovwe matrix is : |  p4+p5-p2+p6  |   p1+p2        |
+                             |  p3+p4        |   p1+p5-p3-p7/ | 
+Time complexity of strassen’s method:
+Addition and Subtraction of two matrices takes O(N2) time. So time complexity can be written as T(N) = 7T(N/2) +  O(N2)
+From Master's Theorem, time complexity of above method is    O(NLog7) which is approximately O(N2.8074).
+
+
+
+
+
+
+
+
+
+
+
+
+
+Generally Strassen’s Method is not preferred for practical applications for following reasons :
+ 
+1.The constants used in Strassen’s method are high and for a typical application Naive method works better. 
+2.For Sparse matrices, there are better methods especially designed for them. 
+3.The submatrices in recursion take extra space. 
+4.Because of the limited precision of computer arithmetic on noninteger values, larger errors accumulate in Strassen’s algorithm than in Naive Method
+
+Easy way to remember formulae:
+remember these 4 rules:
+1.AHED (Learn it as ‘Ahead’)
+2.Diagonal
+3.Last CR
+4.First CR
+
+Also, consider X as (Row +) and Y as (Column -) matrix Follow the Steps :
+
+1.Write P1 = A; P2 = H; P3 = E; P4 = D
+
+2.For P5 we will use Diagonal Rule i.e. (Sum the Diagonal Elements Of Matrix X ) * (Sum the Diagonal Elements Of Matrix Y ), we get P5 = (A + D)* (E + H)
+
+3.For P6 we will use Last CR Rule i.e. Last Column of X and Last Row of Y and remember that Row+ and Column- so i.e. (B – D) * (G + H), we get P6 = (B – D) * (G + H)
+
+4.For P7 we will use First CR Rule i.e. First Column of X and First Row of Y and remember that Row+ and Column- so i.e. (A – C) * (E + F), we get P7 = (A – C) * (E + F)
+
+5.Come Back to P1 : we have A there and it’s adjacent element in Y Matrix is E, since Y is Column Matrix so we select a column in Y such that E won’t come, 
+   we find F H Column, so multiply A with (F – H) So, finally P1 = A * (F – H)
+
+6.Come Back to P2 : we have H there and it’s adjacent element in X Matrix is D, since X is Row Matrix so we select a Row in X such that D won’t come, 
+   we find A B Column, so multiply H with (A + B) So, finally P2 = (A + B) * H
+
+7.Come Back to P3 : we have E there and it’s adjacent element in X Matrix is A, since X is Row Matrix so we select a Row in X such that A won’t come, 
+   we find C D Column, so multiply E with (C + D) So, finally P3 = (C + D) * E
+
+8.Come Back to P4 : we have D there and it’s adjacent element in Y Matrix is H, since Y is Column Matrix so we select a column in Y such that H won’t come,
+   we find G E Column, so multiply D with (G – E) So, finally P4 = D * (G – E)
+
+9.Remember Counting : Write P1 + P2 at C2
+
+10.Write P3 + P4 at its diagonal Position i.e. at C3
+
+11.Write P4 + P5 + P6 at 1st position and subtract P2 i.e. C1 = P4 + P5 + P6 – P2
+
+12.Write odd values at last Position with alternating – and + sign i.e. P1 P3 P5 P7 becomes C4 = P1 – P3 + P5 – P7
+  
+Code:
+#include <bits/stdc++.h>
+#include <cmath>
+#define vi vector<int>
+#define vii vector<vi>
+using namespace std;
+/* finding next square of 2*/
+int nextPowerOf2(int k)
+{
+	return pow(2, int(ceil(log2(k))));
+}
+// printing matrix
+void display(vii C, int m, int n)
+{
+	for (int i = 0; i < m; i++)
+	{
+		cout << "|"
+			<< " ";
+		for (int j = 0; j < n; j++)
+		{
+			cout << C[i][j] << " ";
+		}
+		cout << "|" << endl;
+	}
+}
+//! addition and subtraction
+void add(vii &A, vii &B, vii &C, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			C[i][j] = A[i][j] + B[i][j];
+		}
+	}
+}
+void sub(vii &A, vii &B, vii &C, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			C[i][j] = A[i][j] - B[i][j];
+		}
+	}
+}
+//!-----------------------------
+void Strassen_algorithm(vii &A, vii &B, vii &C, int size)
+{
+	if (size == 1)
+	{
+		C[0][0] = A[0][0] * B[0][0];
+		return;
+	}
+	else
+	{
+		int newSize = size / 2;
+		vi z(newSize);
+		vii a(newSize, z), b(newSize, z), c(newSize, z), d(newSize, z),
+			e(newSize, z), f(newSize, z), g(newSize, z), h(newSize, z),
+			c11(newSize, z), c12(newSize, z), c21(newSize, z), c22(newSize, z),
+			p1(newSize, z), p2(newSize, z), p3(newSize, z), p4(newSize, z),
+			p5(newSize, z), p6(newSize, z), p7(newSize, z), fResult(newSize, z),
+			sResult(newSize, z);
+		int i, j;
+
+		//! divide the matrix in equal parts
+		for (i = 0; i < newSize; i++)
+		{
+			for (j = 0; j < newSize; j++)
+			{
+				a[i][j] = A[i][j];
+				b[i][j] = A[i][j + newSize];
+				c[i][j] = A[i + newSize][j];
+				d[i][j] = A[i + newSize][j + newSize];
+
+				e[i][j] = B[i][j];
+				f[i][j] = B[i][j + newSize];
+				g[i][j] = B[i + newSize][j];
+				h[i][j] = B[i + newSize][j + newSize];
+			}
+		}
+		/*
+			A		 B		 C
+		[a b] * [e f] = [c11 c12]
+			 [g h]	 [c21 c22]
+		p1,p2,p3,p4=AHED for this: A:Row(+) and B:Column(-)
+		p5=Diagonal :both +ve
+		p6=Last CR :A:Row(-) B:Column(+)
+		p7=First CR :A:Row(-) B:Column(+)
+		*/
+		//! calculating all strassen formulas
+		//*p1=a*(f-h)
+		sub(f, h, sResult, newSize);
+		Strassen_algorithm(a, sResult, p1, newSize);
+
+		//*p2=h*(a+b)
+		add(a, b, fResult, newSize);
+		Strassen_algorithm(fResult, h, p2, newSize);
+
+		//*p3=e*(c+d)
+		add(c, d, fResult, newSize);
+		Strassen_algorithm(fResult, e, p3, newSize);
+
+		//*p4=d*(g-e)
+		sub(g, e, sResult, newSize);
+		Strassen_algorithm(d, sResult, p4, newSize);
+
+		//*p5=(a+d)*(e+h)
+		add(a, d, fResult, newSize);
+		add(e, h, sResult, newSize);
+		Strassen_algorithm(fResult, sResult, p5, newSize);
+
+		//*p6=(b-d)*(g+h)
+		sub(b, d, fResult, newSize);
+		add(g, h, sResult, newSize);
+		Strassen_algorithm(fResult, sResult, p6, newSize);
+
+		//*p7=(a-c)*(e+f)
+		sub(a, c, fResult, newSize);
+		add(e, f, sResult, newSize);
+		Strassen_algorithm(fResult, sResult, p7, newSize);
+
+		/* calculating all elements of C by p1,p2,p3
+		c11=p4+p5+p6-p2
+		c12=p1+p2
+		c21=p3+p4
+		c22=p1-p3+p5-p7
+		*/
+		add(p1, p2, c12, newSize); //!
+		add(p3, p4, c21, newSize); //!
+
+		add(p4, p5, fResult, newSize);
+		add(fResult, p6, sResult, newSize);
+		sub(sResult, p2, c11, newSize); //!
+
+		sub(p1, p3, fResult, newSize);
+		add(fResult, p5, sResult, newSize);
+		sub(sResult, p7, c22, newSize); //!
+
+		// Grouping the results obtained in a single matrix:
+		for (i = 0; i < newSize; i++)
+		{
+			for (j = 0; j < newSize; j++)
+			{
+				C[i][j] = c11[i][j];
+				C[i][j + newSize] = c12[i][j];
+				C[i + newSize][j] = c21[i][j];
+				C[i + newSize][j + newSize] = c22[i][j];
+			}
+		}
+	}
+}
+/*for converting matrix to square matrix*/
+void ConvertToSquareMat(vii &A, vii &B, int r1, int c1, int r2, int c2)
+{
+	int maxSize = max({r1, c1, r2, c2});
+	int size = nextPowerOf2(maxSize);
+
+	vi z(size);
+	vii Aa(size, z), Bb(size, z), Cc(size, z);
+
+	for (unsigned int i = 0; i < r1; i++)
+	{
+		for (unsigned int j = 0; j < c1; j++)
+		{
+			Aa[i][j] = A[i][j];
+		}
+	}
+	for (unsigned int i = 0; i < r2; i++)
+	{
+		for (unsigned int j = 0; j < c2; j++)
+		{
+			Bb[i][j] = B[i][j];
+		}
+	}
+	Strassen_algorithm(Aa, Bb, Cc, size);
+	vi temp1(c2);
+	vii C(r1, temp1);
+	for (unsigned int i = 0; i < r1; i++)
+	{
+		for (unsigned int j = 0; j < c2; j++)
+		{
+			C[i][j] = Cc[i][j];
+		}
+	}
+	display(C, r1, c1);
+}
+int main()
+{
+	vii a = {
+		{1, 2, 3},
+		{1, 2, 3},
+		{0, 0, 2}};
+	vii b = {
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1}};
+	ConvertToSquareMat(a, b, 3, 3, 3, 3); // A[][],B[][],R1,C1,R2,C2
+	return 0;
+
+}
+
