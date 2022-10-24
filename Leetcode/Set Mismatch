@@ -1,0 +1,16 @@
+class Solution {
+public:
+    vector<int> findErrorNums(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int d=1,m=1;
+        for(int i=1;i<nums.size();i++){
+            if(nums[i]==nums[i-1])
+                d=nums[i];
+            else if(nums[i]>nums[i-1]+1)
+                m=nums[i-1]+1;
+        }
+        int mi=nums[nums.size()-1]!=nums.size()?nums.size():m;
+        vector<int> a={d,mi};
+        return a;
+    }
+};
