@@ -1,0 +1,17 @@
+class MyCalendar {
+public:
+   vector<pair<int,int>> vp;
+    MyCalendar() {
+        
+    }
+    
+    bool book(int start, int end) {
+        for(auto p:vp){
+            if(start>=p.second) continue;
+            if(end<=p.first) continue;
+            return false;
+        }
+        vp.push_back({start,end});
+        return true;
+    }
+};
